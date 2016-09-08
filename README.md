@@ -1,1 +1,2 @@
-# Comp-270
+# Comp-271
+Descrete Structures, C++
