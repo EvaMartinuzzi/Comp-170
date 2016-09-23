@@ -1,2 +1,2 @@
 # Comp-271
-Descrete Structures, C++
+Data Structures, C++
