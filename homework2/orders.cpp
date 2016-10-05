@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include "order.h"
 
@@ -6,28 +7,28 @@ using namespace std;
 
 Order::Order(char * s, char bs, double p, int q, char mp, int oid)
 {
-	if (p <= 0.0) {
-		cout << "Price must be a positive integer" << endl;
+	if (p > 0.0) {
+		price = p;
 	}
-	if (q <= 0) {
-		cout << "Quantity must be a positive integer" << endl;
+	if (q > 0) {
+		quantity = q;
 	}
-	if (oid <= 0) {
-		cout << "Order ID must be present" << endl;
+	if (oid > 0) {
+		order_id = oid;
 	}
-	if (s == NULL) {
-		cout << "Symbol must be present" << endl;
+	if (s != NULL) {
+		sym = new char[strlen(s) + 1];
+		strcpy(sym, s);
 	}
-	if (bs == '\0') {
-		cout << "Side must be Bid or Ask" << endl;
+	if (bs != '\0') {
+		side = bs;
 	}
-	if (mp == '\0') {
-		cout << "Message Type must be add, modify, remove, or clear" << endl;
+	if (mp != '\0') {
+		message_type = mp;
 	}
 }
 
 Order::~Order() {
-	cout << "Destroying Order" << endl;
 	if (price != 0.0) {
 		price = 0.0;
 	}
@@ -53,7 +54,7 @@ bool Order::set_symbol(char * s) {
 		delete[] sym;
 	}
 	sym = new char[strlen(s) + 1];
-	sym = s;
+	strcpy(sym, s);
 	return true;
 }
 
@@ -128,17 +129,18 @@ char Order::get_message_type() {
 char Order::get_order_id() {
 	return order_id;
 }
-void Order::write_console(char * s, char bs, double p, int q, char mp, int oid) {
+void Order::write_console() {
 	cout << endl;
-	if (p <= 0.0 || q <= 0 || oid <= 0 || s == NULL || bs == '\0' || mp == '\0') {
+	if (price <= 0.0 || quantity <= 0 || order_id <= 0 || sym == NULL || side == '\0' || message_type == '\0') {
 		cout << "Not all data points are available, can't print!" << endl;
 	}
 	else {
-		cout << "MsgType: " << mp << " Sym : " << s << " Side : " << bs << " Quantity : " << q << " Price : " << p << " OrderId : " << oid << endl;
+		cout << "MsgType: " << message_type << " Sym : " << sym << " Side : " << side << " Quantity : " << quantity << " Price : " << price << " OrderId : " << order_id << endl;
 	}
 }
 
 void Order::count_msg_types(Order **& orders, int num_orders) {
+	cout << endl;
 	int a = 0; int m = 0; int d = 0; int c = 0;
 	char mp;
 	char *msg;
