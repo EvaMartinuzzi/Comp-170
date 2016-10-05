@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "order.h"
 #include <fstream> 
 #include <cstring>
@@ -29,15 +30,9 @@ int main() {
 	{
 		fin >> msg_type;
 		fin.getline(temp, 200, ',');
-		//symbol[0] = 'Y'; //get rid of this
-		//symbol[1] = 'H';
-		//symbol[2] = 'O';
-		//symbol[3] = 'O';
-		for (int j = 0; j < 4; j++) {
-			fin >> symbol[j];
-			strcpy(symbol, temp); //unsafe variable
-		}
-		fin.getline(temp, 200, ',');
+		fin.getline(temp, 200, ',');//YHOO
+		symbol = new char[strlen(temp) + 1];
+		strcpy(symbol, temp); //this is dynamic array
 		fin >> side;
 		fin.getline(temp, 200, ',');
 		fin >> price;
@@ -46,15 +41,18 @@ int main() {
 		fin.getline(temp, 200, ',');
 		fin >> orderid;
 		fin.getline(temp, 200, '\n');
-		orders[j]->write_console(symbol, side, price, quantity, msg_type, orderid);
+		orders[j] = new Order(symbol, side, price, quantity, msg_type, orderid);
+		delete[] symbol;
+		orders[j]->write_console();
 	}
-		orders[num_orders]->count_msg_types(orders, num_orders);
+	fin.clear(); fin.close();
+
+	orders[num_orders]->count_msg_types(orders, num_orders);
 
 	for (int j = 0; j < num_orders; j++) {
-		delete[] orders[j]; 
+		delete orders[j]; 
 	}
 	delete[] orders;
-	fin.clear(); fin.close();
 	system("pause");
 	return 0;
 }
