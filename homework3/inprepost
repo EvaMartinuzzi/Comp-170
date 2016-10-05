@@ -1,0 +1,170 @@
+#include <iostream>
+#include <stack>
+#include <string>
+#include <cstring>
+
+using namespace std;
+
+string infixToPrefix(string expression);
+string prefixToInfix(string expression);
+int isp(char ch);
+int icp(char ch);
+bool isOperand(char C);
+void menuOption(int &choice);
+
+int main()
+{
+	string expression;
+	string output;
+	int choice = -1;
+	menuOption(choice);
+	while (choice >= 1) {
+		cin.ignore();
+		switch (choice) {
+		case 1:
+			cout << "Enter your infix expression: " << endl;
+			cin >> expression;
+			output = infixToPrefix(expression);
+			break;
+		case 2:
+			cout << "(Convert to Infix) Enter your prefix expression: " << endl;
+			cin >> expression;
+			output = prefixToInfix(expression);
+			break;
+
+		default:
+			cout << "Not a valid choice try again" << endl;
+			choice = -1;
+			menuOption(choice);
+		}
+		cout << "Outcome of Conversion:  " << output << endl;
+		menuOption(choice);
+	}
+	return 0;
+}
+
+string prefixToInfix(string expression) {
+	string infix = "";
+	stack<string> S;
+	string op1, op2, ch;
+
+	for (int i = expression.length() - 1; i >= 0; i--) {
+		ch = expression[i];
+		if (isOperand(ch[0])) {
+			S.push(ch);
+		}
+		else {
+			op1 = S.top();
+			S.pop();
+			op2 = S.top();
+			S.pop();
+			S.push("(" + op1 + ch + op2 + ")");
+		}
+	}
+	while (!S.empty()) {
+		infix = S.top() + infix;
+		S.pop();
+	}
+	return infix;
+}
+
+
+string infixToPrefix(string expression)
+{   
+	stack<char> S; //operators
+	stack<char>output; //display
+	string prefix = "";
+	char ch;
+	
+	int x = expression.length() - 1;
+	while (x >= 0) {
+		ch = expression[x];
+		x--;
+		if (ch == ')')
+		{
+			ch = '\0';
+		}
+		else if (ch == '(')
+		{
+			ch = '\0';
+		}
+		if (isOperand(ch) == true)
+		{
+			output.push(ch);
+		}
+		if (isOperand(ch) == false)
+		{
+			if (S.empty())
+			{
+				S.push(ch);
+			}
+			else if (!S.empty())
+			{
+				if (isp(S.top()) > icp(ch))
+				{
+					output.push(S.top());
+					S.pop();
+					S.push(ch);
+				}
+
+				else if (icp(ch) >= isp(S.top()))
+				{
+					S.push(ch);
+				}
+			}
+		}
+		}
+	while (!S.empty()) {
+		output.push(S.top());
+		S.pop();
+	}
+	while (!output.empty()) {
+		prefix += output.top();
+		output.pop();
+	}
+		return prefix;
+	}
+
+void menuOption(int &choice) {
+	cout << "\n\n===Menu=== \n";
+	cout << "     1. Infix to Prefix Conversion" << endl;
+	cout << "     2. Prefix to Infix Conversion" << endl;
+	cout << "     Press 0 to quit" << endl;
+	cout << "Choice: ";
+	cin >> choice;
+}
+
+
+bool isOperand(char C)
+{
+	if (C >= '0' && C <= '9') return true;
+	if (C >= 'a' && C <= 'z') return true;
+	if (C >= 'A' && C <= 'Z') return true;
+	return false;
+}
+
+int isp(char ch) {
+	switch (ch)
+	{
+	case '+':
+	case '-': return 1;
+	case '*':
+	case '/': return 2;
+	case '^': return 3;
+	case '(': return 0;
+	}
+	return -1;
+}
+
+int icp(char ch) {
+	switch (ch)
+	{
+	case '+':
+	case '-': return 1;
+	case '*':
+	case '/': return 2;
+	case '^': return 3;
+	case '(': return 4;
+	}
+	return -1;
+}
