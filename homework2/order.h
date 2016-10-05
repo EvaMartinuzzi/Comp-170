@@ -24,9 +24,10 @@ public:
 	char get_side(); //return said var
 	double get_price(); //return said var
 	int get_quantity(); //return said var
-	void write_console(char * s, char bs, double p, int q, char mp, int oid);
+	void write_console();
 	void count_msg_types(Order **& orders, int num_orders);
 	char get_message_type();
 	char get_order_id();
 };
 #endif 
+
